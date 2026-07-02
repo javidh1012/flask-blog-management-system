@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7fe;
+            color: #333333;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            background-color: #ffffff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+        }
+        .icon-shape {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(13, 110, 253, 0.1);
+            color: #0d6efd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 1.5rem;
+        }
+        .table-responsive {
+            max-height: 380px;
+            overflow-y: auto;
+        }
+        .thead-sticky th {
+            position: sticky;
+            top: 0;
+            background-color: #ffffff;
+            z-index: 1;
+            box-shadow: inset 0 -1px 0 #dee2e6;
+        }
+        .text-tracking {
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid py-4 px-4 px-lg-5">
+
+        <header class="mb-5">
+            <div class="d-flex align-items-center gap-3">
+                <div class="p-2 bg-primary text-white rounded-3 d-flex align-items-center justify-content-center" style="width: 52px; height: 52px;">
+                    <i class="bi bi-grid-1x2-fill fs-3"></i>
+                </div>
+                <div>
+                    <h1 class="h2 fw-bold text-dark mb-1">Blog Dashboard</h1>
+                    <p class="text-muted mb-0">Monitor blog statistics and analytics.</p>
+                </div>
+            </div>
+        </header>
+
+        <section class="row g-4 mb-5">
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted text-uppercase fs-7 fw-semibold text-tracking">Total Users</span>
+                            <h3 class="fw-bold display-6 my-1 text-dark">{{ total_users }}</h3>
+                        </div>
+                        <div class="icon-shape">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted text-uppercase fs-7 fw-semibold text-tracking">Total Blog Posts</span>
+                            <h3 class="fw-bold display-6 my-1 text-dark">{{ total_posts }}</h3>
+                        </div>
+                        <div class="icon-shape">
+                            <i class="bi bi-journal-richtext"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted text-uppercase fs-7 fw-semibold text-tracking">Total Comments</span>
+                            <h3 class="fw-bold display-6 my-1 text-dark">{{ total_comments }}</h3>
+                        </div>
+                        <div class="icon-shape">
+                            <i class="bi bi-chat-left-dots-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted text-uppercase fs-7 fw-semibold text-tracking">Email Providers</span>
+                            <h3 class="fw-bold display-6 my-1 text-dark">
+                                {% for provider,count in provider_count.items()%}
+                                    <p  style="font-size:15px; color:black;">{{ provider }} : {{ count }}</p>
+                                {% endfor %}
+                            </h3>
+                        </div>
+                        <div class="icon-shape">
+                            <i class="bi bi-envelope-at-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="row g-4 mb-5">
+            <div class="col-12 col-lg-6">
+                <div class="card h-100 p-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-person-check-fill text-primary fs-4"></i>
+                        <h4 class="card-title fw-bold mb-0">Registered Users</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                        <thead class="thead-sticky">
+                        <tr>
+                    <th class="text-muted fw-semibold py-3 border-bottom-2">User Name</th>
+                    <th class="text-muted fw-semibold py-3 border-bottom-2">Email Address</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for user in register_user %}
+        <tr>
+            <td class="text-dark py-3 border-bottom">{{ user.name }}</td>
+            <td class="text-muted py-3 border-bottom">{{ user.email }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="card h-100 p-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-pie-chart-fill text-primary fs-4"></i>
+                        <h4 class="card-title fw-bold mb-0">Email Provider Statistics</h4>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+
+                                    <thead class="thead-sticky">
+                                    <tr>
+                                        <th class="text-muted fw-semibold py-3 border-bottom-2">Provider</th>
+                                        <th class="text-muted fw-semibold py-3 border-bottom-2 text-end">Users</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for provider, count in provider_count.items() %}
+                                        <tr>
+                                            <td class="py-2 text-dark">{{ provider }}</td>
+                                            <td class="py-2 text-end fw-bold text-primary">{{ count }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+                            <div style="position: relative; height: 220px; width: 100%;">
+                                <img   src="{{ url_for('static',filename='provider_chart.png')}}"  style="height:180px; width:100%; object-fit:contain;">>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-12 col-md-6">
+                <div class="card p-4 border-start border-primary border-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-award-fill text-warning fs-4"></i>
+                        <h5 class="card-title fw-bold mb-0">Most Active Comment Author</h5>
+                    </div>
+                    <div class="bg-light p-3 rounded-3">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <span class="text-muted d-block small mb-1">Author Name</span>
+                                <span class="fw-bold text-dark fs-5">{{ top_commend_author }}</span>
+                            </div>
+                            <div class="col-auto text-end">
+                                <span class="text-muted d-block small mb-1">Total Comments</span>
+                                <span class="badge bg-primary fs-6 px-3 rounded-pill">{{ total_author_count }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="card p-4 border-start border-success border-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-lightning-charge-fill text-danger fs-4"></i>
+                        <h5 class="card-title fw-bold mb-0">Most Commented Blog Post</h5>
+                    </div>
+                    <div class="bg-light p-3 rounded-3">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <span class="text-muted d-block small mb-1">Blog Post Title</span>
+                                <span class="fw-bold text-dark text-truncate d-inline-block style-title" style="max-width: 100%;">{{ max_post_comment_title}}</span>
+                            </div>
+                            <div class="col-auto text-end">
+                                <span class="text-muted d-block small mb-1">Comments</span>
+                                <span class="badge bg-success fs-6 px-3 rounded-pill">{{ max_post_comment_count }} Comments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="row mb-4">
+            <div class="col-12">
+                <div class="card p-4">
+                    <div class="d-flex align-items-center gap-2 mb-4">
+                        <i class="bi bi-graph-up-arrow text-primary fs-4"></i>
+                        <h4 class="card-title fw-bold mb-0">Blog Posts Trend Over Years</h4>
+                    </div>
+                    <div style="position: relative; height: 3   20px; width: 100%;">
+                        <img src="{{url_for('static',filename='trends_path.png')}}">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. Email Provider Bar Chart
+            const barCtx = document.getElementById('providerBarChart').getContext('2d');
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'email.com'],
+                    datasets: [{
+                        label: 'Users',
+                        data: [75, 30, 20, 15, 10],
+                        backgroundColor: '#0d6efd',
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        barThickness: 16
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { padding: 10 }
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.04)' }
+                        }
+                    }
+                }
+            });
+
+            // 2. Blog Post Trend Line Chart
+            const lineCtx = document.getElementById('blogTrendLineChart').getContext('2d');
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2022', '2023', '2024', '2025', '2026'],
+                    datasets: [{
+                        label: 'Posts Generated',
+                        data: [12, 18, 27, 35, 20],
+                        borderColor: '#0d6efd',
+                        backgroundColor: 'rgba(13, 110, 253, 0.06)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#0d6efd',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { padding: 12 }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            title: { display: true, text: 'Year', font: { weight: '600' } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.04)' },
+                            title: { display: true, text: 'Number of Posts', font: { weight: '600' } },
+                            ticks: { precision: 0 }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

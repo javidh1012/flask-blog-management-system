@@ -1,0 +1,14 @@
+Flask
+Werkzeug
+Flask-Login
+Flask-WTF
+WTForms
+Bootstrap-Flask
+Flask-CKEditor
+pymongo
+python-dotenv
+pandas
+matplotlib
+
+
+
