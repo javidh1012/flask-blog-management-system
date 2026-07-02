@@ -231,12 +231,16 @@ http://127.0.0.1:5001
 
 **SK Mohamed Javidh**
 
-B.Tech Computer Science & Engineering
-
-B. S. Abdur Rahman Crescent Institute of Science and Technology
-
 ---
 
-# License
+## 🤝 Contributing
 
-This project is developed for educational purposes.
+Contributions are welcome and greatly appreciated!
+
+Feel free to fork this repository, customize it for your own projects, fix bugs, improve features, or add new functionality. If you make improvements, consider opening a Pull Request so everyone can benefit from your contributions.
+
+If you encounter any issues or have suggestions, please open an issue in the repository.
+
+Happy coding! 🚀
+
+
