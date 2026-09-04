@@ -314,16 +314,45 @@ def dashboard():
     register_user = users[["name", "email"]].to_dict(orient="records") if not users.empty else []
 
     # --- 2. Top Comment Author Logic ---
+    # --- 2. Most Commented Author Logic ---
     top_commend_author = "No Comments"
     total_author_count = 0
-    if not comments.empty and not users.empty:
-        comments['author_id_str'] = comments['author_id'].astype(str)
-        users['id_str'] = users['_id'].astype(str)
-        merged = comments.merge(users, left_on="author_id_str", right_on="id_str")
-        if not merged.empty:
-            author_count = merged.groupby("name")["text"].count()
-            top_commend_author = author_count.idxmax()
-            total_author_count = int(author_count.max())
+
+    if not comments.empty and not posts.empty and not users.empty:
+
+        # Convert IDs to strings for merging
+        comments['post_id_str'] = comments['post_id'].astype(str)
+        posts['id_str'] = posts['_id'].astype(str)
+
+        # Connect comments with the posts they belong to
+        comment_post_merge = comments.merge(
+            posts,
+            left_on="post_id_str",
+            right_on="id_str"
+        )
+
+        if not comment_post_merge.empty:
+
+            # Convert post author IDs and user IDs to strings
+            comment_post_merge['post_author_id_str'] = (
+                comment_post_merge['author_id_y'].astype(str)
+            )
+
+            users['user_id_str'] = users['_id'].astype(str)
+
+            # Connect posts with their authors
+            final_merge = comment_post_merge.merge(
+                users,
+                left_on="post_author_id_str",
+                right_on="user_id_str"
+            )
+
+            if not final_merge.empty:
+                # Count total comments received by each author
+                author_count = final_merge.groupby("name")["text"].count()
+
+                top_commend_author = author_count.idxmax()
+                total_author_count = int(author_count.max())
 
     # --- 3. Most Commented Post Logic ---
     max_post_comment_title = "No Posts"
